@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: sistema-pedidos
+    runtime: node
+    plan: 0.5c-512mb
+    buildCommand: npm ci --prefix client && npm run build --prefix client && npm ci --prefix server
+    startCommand: cd server && npm start
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 24.22.1
+      - key: DB_PATH
+        value: /var/data/data.sqlite
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: KITCHEN_EMAIL
+        sync: false
+      - key: KITCHEN_PASSWORD
+        sync: false
+    disk:
+      name: pedidos-database
+      mountPath: /var/data
+      sizeGB: 1
